@@ -33,25 +33,30 @@ shinyServer(function(input, output) {
   # draw a vertical line for the predicted child height
   output$dataPlot <- renderPlot({
     with(Galton,{
-    sunflowerplot(parent, child, xlim=c(62,74), ylim=c(62,74))
+    sunflowerplot(parent, child, xlim=c(62,74), ylim=c(62,74), xlab = "Mid parent height (inches)",
+                  ylab = "Child height (inches)")
     reg <- buildmodel()
-    abline(reg)
-    lines(lowess(parent, child), col="deepskyblue", lwd=2)
+    abline(reg, col="deepskyblue", lwd=2)
     res <- predictChilddHeight()
-    abline(h = res[1, 1], col = "red", lwd=2)
-    text(x=63, y=res[1, 1], labels = paste("Child height: ", round(res[1, 1], 2)), col = "red", pos = 3)
+    abline(h = res[1, 1], col = "darkgreen", lwd=2)
+    text(x=62.6, y=res[1, 1], labels = paste("Predicted child height: ", round(res[1, 1], 2))
+         , col = "darkgreen", pos = 3)
     })
+    legend("bottomright", legend=c("sun flower plot", "linear regression", "Predicted child height"),
+           col = c("red", "deepskyblue", "darkgreen"), lwd = 2,
+           lty = c(NA, 1, 1), pch = c('*', NA, NA), pt.cex = 3)
+    
   })
   
   # Predict Child height based on father and mother mid height
   # Returns 95% prediction interval of the child height with fit, lower and upper bound.
-  output$fit <- renderPrint({
-    predictChilddHeight()[1, 1]
+  output$fit <- renderText({
+    round(predictChilddHeight()[1, 1], 2)
   })
-  output$lwr <- renderPrint({
-    predictChilddHeight()[1, 2]
+  output$lwr <- renderText({
+    round(predictChilddHeight()[1, 2], 2)
   })
-  output$upr <- renderPrint({
-    predictChilddHeight()[1, 3]
+  output$upr <- renderText({
+    round(predictChilddHeight()[1, 3], 2)
   })
 })
