@@ -1,19 +1,17 @@
 library(shiny)
+library(UsingR)
+data(Galton)
 
-# Define server logic required to generate and plot a random distribution
+# Define server logic required to predict child's height
 shinyServer(function(input, output) {
   
-  # Expression that generates a plot of the distribution. The expression
-  # is wrapped in a call to renderPlot to indicate that:
-  #
-  #  1) It is "reactive" and therefore should be automatically 
-  #     re-executed when inputs change
-  #  2) Its output type is a plot 
-  #
-  output$distPlot <- renderPlot({
-    
-    # generate an rnorm distribution and plot it
-    dist <- rnorm(input$obs)
-    hist(dist, col = "deepskyblue")
+  # Expression that generates a plot of Galton data.
+  output$dataPlot <- renderPlot({
+    with(Galton,{
+    sunflowerplot(parent, child, xlim=c(62,74), ylim=c(62,74))
+    reg <- lm(child ~ parent)
+    abline(reg)
+    lines(lowess(parent, child), col="deepskyblue", lwd=2)
+    })
   })
 })

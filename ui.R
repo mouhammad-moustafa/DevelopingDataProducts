@@ -1,22 +1,23 @@
 library(shiny)
 
 # Define UI for application that plots random distributions 
-shinyUI(pageWithSidebar(
+shinyUI(fluidPage(
   
   # Application title
-  headerPanel("Hello Shiny!"),
+  titlePanel("Children Height Prediction"),
   
-  # Sidebar with a slider input for number of observations
-  sidebarPanel(
-    sliderInput("obs", 
-                "Number of observations:", 
-                min = 1,
-                max = 1000, 
-                value = 500)
-  ),
-  
-  # Show a plot of the generated distribution
-  mainPanel(
-    plotOutput("distPlot")
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("fheight", "Father's height (inches):", min = 60, max = 90, step = 0.5, value = 68),
+      numericInput("mheight", "Mother's height (inches):", min = 60, max = 90, step = 0.5, value = 63),
+      
+      submitButton("Predict")
+    ),
+    
+    # Show a plot of Galton dataset
+    mainPanel(
+      h4("Plot"),
+      plotOutput("dataPlot")
+    )
   )
 ))
